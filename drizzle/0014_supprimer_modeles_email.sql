@@ -1,0 +1,1 @@
+DROP TABLE "modeles_email" CASCADE;

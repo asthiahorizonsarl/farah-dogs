@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Données personnelles : ne jamais versionner
+*.accdb
+*.mdb
+/data/access-backup/
+*.xlsx

@@ -1,0 +1,2111 @@
+{
+  "id": "2dc63e1c-c876-4404-ac59-519f85b22d78",
+  "prevId": "a63c9207-7c6d-4660-8179-485354799c11",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.annees": {
+      "name": "annees",
+      "schema": "",
+      "columns": {
+        "annee": {
+          "name": "annee",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "cotisation_defaut_centimes": {
+          "name": "cotisation_defaut_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarque": {
+          "name": "remarque",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.association": {
+      "name": "association",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": 1
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Association Farah Dogs'"
+        },
+        "adresse": {
+          "name": "adresse",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "npa_localite": {
+          "name": "npa_localite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telephone": {
+          "name": "telephone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "iban": {
+          "name": "iban",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signataire": {
+          "name": "signataire",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fonction_signataire": {
+          "name": "fonction_signataire",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lieu_signature": {
+          "name": "lieu_signature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mention_attestation": {
+          "name": "mention_attestation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.chiens": {
+      "name": "chiens",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "race_id": {
+          "name": "race_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "couleur_id": {
+          "name": "couleur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sexe": {
+          "name": "sexe",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_naissance": {
+          "name": "date_naissance",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "puce": {
+          "name": "puce",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reforme": {
+          "name": "reforme",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "date_reforme": {
+          "name": "date_reforme",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decede": {
+          "name": "decede",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "date_deces": {
+          "name": "date_deces",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarques": {
+          "name": "remarques",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "modifie_le": {
+          "name": "modifie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "chiens_nom_idx": {
+          "name": "chiens_nom_idx",
+          "columns": [
+            {
+              "expression": "nom",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "chiens_race_id_races_id_fk": {
+          "name": "chiens_race_id_races_id_fk",
+          "tableFrom": "chiens",
+          "tableTo": "races",
+          "columnsFrom": [
+            "race_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "chiens_couleur_id_couleurs_id_fk": {
+          "name": "chiens_couleur_id_couleurs_id_fk",
+          "tableFrom": "chiens",
+          "tableTo": "couleurs",
+          "columnsFrom": [
+            "couleur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "chiens_puce_unique": {
+          "name": "chiens_puce_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "puce"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.contact_langues": {
+      "name": "contact_langues",
+      "schema": "",
+      "columns": {
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "langue_id": {
+          "name": "langue_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "contact_langues_contact_id_contacts_id_fk": {
+          "name": "contact_langues_contact_id_contacts_id_fk",
+          "tableFrom": "contact_langues",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "contact_langues_langue_id_langues_id_fk": {
+          "name": "contact_langues_langue_id_langues_id_fk",
+          "tableFrom": "contact_langues",
+          "tableTo": "langues",
+          "columnsFrom": [
+            "langue_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contact_langues_contact_id_langue_id_pk": {
+          "name": "contact_langues_contact_id_langue_id_pk",
+          "columns": [
+            "contact_id",
+            "langue_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.contact_types": {
+      "name": "contact_types",
+      "schema": "",
+      "columns": {
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type_id": {
+          "name": "type_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "contact_types_contact_id_contacts_id_fk": {
+          "name": "contact_types_contact_id_contacts_id_fk",
+          "tableFrom": "contact_types",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "contact_types_type_id_types_membre_id_fk": {
+          "name": "contact_types_type_id_types_membre_id_fk",
+          "tableFrom": "contact_types",
+          "tableTo": "types_membre",
+          "columnsFrom": [
+            "type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contact_types_contact_id_type_id_pk": {
+          "name": "contact_types_contact_id_type_id_pk",
+          "columns": [
+            "contact_id",
+            "type_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.contacts": {
+      "name": "contacts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "forme_politesse_id": {
+          "name": "forme_politesse_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prenom": {
+          "name": "prenom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "societe": {
+          "name": "societe",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fonction": {
+          "name": "fonction",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "page_web": {
+          "name": "page_web",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "page_web_texte": {
+          "name": "page_web_texte",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tel_professionnel": {
+          "name": "tel_professionnel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tel_personnel": {
+          "name": "tel_personnel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tel_mobile": {
+          "name": "tel_mobile",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fax": {
+          "name": "fax",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "adresse": {
+          "name": "adresse",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "code_postal": {
+          "name": "code_postal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "localite": {
+          "name": "localite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "canton": {
+          "name": "canton",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pays": {
+          "name": "pays",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sponsor_fondation": {
+          "name": "sponsor_fondation",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "moniteur": {
+          "name": "moniteur",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "magazine": {
+          "name": "magazine",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "archive": {
+          "name": "archive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "date_archivage": {
+          "name": "date_archivage",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarques": {
+          "name": "remarques",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarques_access": {
+          "name": "remarques_access",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "modifie_le": {
+          "name": "modifie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "contacts_nom_idx": {
+          "name": "contacts_nom_idx",
+          "columns": [
+            {
+              "expression": "nom",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "contacts_localite_idx": {
+          "name": "contacts_localite_idx",
+          "columns": [
+            {
+              "expression": "localite",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "contacts_forme_politesse_id_formes_politesse_id_fk": {
+          "name": "contacts_forme_politesse_id_formes_politesse_id_fk",
+          "tableFrom": "contacts",
+          "tableTo": "formes_politesse",
+          "columnsFrom": [
+            "forme_politesse_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cotisations": {
+      "name": "cotisations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annee": {
+          "name": "annee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "annee_deduite": {
+          "name": "annee_deduite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "montant_centimes": {
+          "name": "montant_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_paiement": {
+          "name": "date_paiement",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarque": {
+          "name": "remarque",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "origine_id": {
+          "name": "origine_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cotisations_contact_idx": {
+          "name": "cotisations_contact_idx",
+          "columns": [
+            {
+              "expression": "contact_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cotisations_annee_idx": {
+          "name": "cotisations_annee_idx",
+          "columns": [
+            {
+              "expression": "annee",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cotisations_contact_id_contacts_id_fk": {
+          "name": "cotisations_contact_id_contacts_id_fk",
+          "tableFrom": "cotisations",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cotisations_dons": {
+      "name": "cotisations_dons",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annee": {
+          "name": "annee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "annee_deduite": {
+          "name": "annee_deduite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "cotisation_centimes": {
+          "name": "cotisation_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_cotisation": {
+          "name": "date_cotisation",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "don_centimes": {
+          "name": "don_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_don": {
+          "name": "date_don",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarque": {
+          "name": "remarque",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "cd_contact_idx": {
+          "name": "cd_contact_idx",
+          "columns": [
+            {
+              "expression": "contact_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cd_annee_idx": {
+          "name": "cd_annee_idx",
+          "columns": [
+            {
+              "expression": "annee",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cotisations_dons_contact_id_contacts_id_fk": {
+          "name": "cotisations_dons_contact_id_contacts_id_fk",
+          "tableFrom": "cotisations_dons",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.couleurs": {
+      "name": "couleurs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.dons": {
+      "name": "dons",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annee": {
+          "name": "annee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "annee_deduite": {
+          "name": "annee_deduite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "montant_centimes": {
+          "name": "montant_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_don": {
+          "name": "date_don",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarque": {
+          "name": "remarque",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "origine_id": {
+          "name": "origine_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "dons_contact_idx": {
+          "name": "dons_contact_idx",
+          "columns": [
+            {
+              "expression": "contact_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "dons_annee_idx": {
+          "name": "dons_annee_idx",
+          "columns": [
+            {
+              "expression": "annee",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "dons_contact_id_contacts_id_fk": {
+          "name": "dons_contact_id_contacts_id_fk",
+          "tableFrom": "dons",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.emails_types": {
+      "name": "emails_types",
+      "schema": "",
+      "columns": {
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "objet": {
+          "name": "objet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contenu": {
+          "name": "contenu",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.envois": {
+      "name": "envois",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annee": {
+          "name": "annee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categorie": {
+          "name": "categorie",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "don_centimes": {
+          "name": "don_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "destinataire": {
+          "name": "destinataire",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "modele_word_id": {
+          "name": "modele_word_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "statut": {
+          "name": "statut",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "erreur": {
+          "name": "erreur",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "le": {
+          "name": "le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "envois_contact_annee_idx": {
+          "name": "envois_contact_annee_idx",
+          "columns": [
+            {
+              "expression": "contact_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "annee",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "envois_contact_id_contacts_id_fk": {
+          "name": "envois_contact_id_contacts_id_fk",
+          "tableFrom": "envois",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "envois_modele_word_id_modeles_word_id_fk": {
+          "name": "envois_modele_word_id_modeles_word_id_fk",
+          "tableFrom": "envois",
+          "tableTo": "modeles_word",
+          "columnsFrom": [
+            "modele_word_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.formes_politesse": {
+      "name": "formes_politesse",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.langues": {
+      "name": "langues",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.modeles_email": {
+      "name": "modeles_email",
+      "schema": "",
+      "columns": {
+        "langue_id": {
+          "name": "langue_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "objet": {
+          "name": "objet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contenu": {
+          "name": "contenu",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "modeles_email_langue_id_langues_id_fk": {
+          "name": "modeles_email_langue_id_langues_id_fk",
+          "tableFrom": "modeles_email",
+          "tableTo": "langues",
+          "columnsFrom": [
+            "langue_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.modeles_word": {
+      "name": "modeles_word",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nom_fichier": {
+          "name": "nom_fichier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fichier": {
+          "name": "fichier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categorie": {
+          "name": "categorie",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.motifs_suivi": {
+      "name": "motifs_suivi",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.parametres_envoi": {
+      "name": "parametres_envoi",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": 1
+        },
+        "seuil_centimes": {
+          "name": "seuil_centimes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 10000
+        },
+        "smtp_hote": {
+          "name": "smtp_hote",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "smtp_port": {
+          "name": "smtp_port",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 587
+        },
+        "smtp_securite": {
+          "name": "smtp_securite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'starttls'"
+        },
+        "smtp_utilisateur": {
+          "name": "smtp_utilisateur",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "smtp_mot_de_passe": {
+          "name": "smtp_mot_de_passe",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expediteur_nom": {
+          "name": "expediteur_nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expediteur_email": {
+          "name": "expediteur_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "copie_cachee": {
+          "name": "copie_cachee",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "piece_jointe": {
+          "name": "piece_jointe",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'word'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pathologies": {
+      "name": "pathologies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.races": {
+      "name": "races",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.remise_pathologies": {
+      "name": "remise_pathologies",
+      "schema": "",
+      "columns": {
+        "remise_id": {
+          "name": "remise_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pathologie_id": {
+          "name": "pathologie_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "remise_pathologies_remise_id_remises_id_fk": {
+          "name": "remise_pathologies_remise_id_remises_id_fk",
+          "tableFrom": "remise_pathologies",
+          "tableTo": "remises",
+          "columnsFrom": [
+            "remise_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "remise_pathologies_pathologie_id_pathologies_id_fk": {
+          "name": "remise_pathologies_pathologie_id_pathologies_id_fk",
+          "tableFrom": "remise_pathologies",
+          "tableTo": "pathologies",
+          "columnsFrom": [
+            "pathologie_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "remise_pathologies_remise_id_pathologie_id_pk": {
+          "name": "remise_pathologies_remise_id_pathologie_id_pk",
+          "columns": [
+            "remise_id",
+            "pathologie_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.remises": {
+      "name": "remises",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "numero": {
+          "name": "numero",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chien_id": {
+          "name": "chien_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "beneficiaire_nom": {
+          "name": "beneficiaire_nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beneficiaire_prenom": {
+          "name": "beneficiaire_prenom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'remise'"
+        },
+        "date_remise": {
+          "name": "date_remise",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_fin": {
+          "name": "date_fin",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motif_fin": {
+          "name": "motif_fin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actif": {
+          "name": "actif",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "moniteur_id": {
+          "name": "moniteur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarques": {
+          "name": "remarques",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_excel": {
+          "name": "source_excel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rapprochement": {
+          "name": "rapprochement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "remises_chien_idx": {
+          "name": "remises_chien_idx",
+          "columns": [
+            {
+              "expression": "chien_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "remises_contact_idx": {
+          "name": "remises_contact_idx",
+          "columns": [
+            {
+              "expression": "contact_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "remises_chien_id_chiens_id_fk": {
+          "name": "remises_chien_id_chiens_id_fk",
+          "tableFrom": "remises",
+          "tableTo": "chiens",
+          "columnsFrom": [
+            "chien_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "remises_contact_id_contacts_id_fk": {
+          "name": "remises_contact_id_contacts_id_fk",
+          "tableFrom": "remises",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "remises_moniteur_id_contacts_id_fk": {
+          "name": "remises_moniteur_id_contacts_id_fk",
+          "tableFrom": "remises",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "moniteur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "utilisateur_id": {
+          "name": "utilisateur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expire_le": {
+          "name": "expire_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_utilisateur_id_utilisateurs_id_fk": {
+          "name": "sessions_utilisateur_id_utilisateurs_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "utilisateurs",
+          "columnsFrom": [
+            "utilisateur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.suivi_photos": {
+      "name": "suivi_photos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "suivi_id": {
+          "name": "suivi_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nom_fichier": {
+          "name": "nom_fichier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contenu": {
+          "name": "contenu",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "suivi_photos_suivi_id_suivis_id_fk": {
+          "name": "suivi_photos_suivi_id_suivis_id_fk",
+          "tableFrom": "suivi_photos",
+          "tableTo": "suivis",
+          "columnsFrom": [
+            "suivi_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.suivis": {
+      "name": "suivis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "contact_id": {
+          "name": "contact_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chien_id": {
+          "name": "chien_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "motif_id": {
+          "name": "motif_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "titre": {
+          "name": "titre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rapport": {
+          "name": "rapport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "etat": {
+          "name": "etat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ouvert'"
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "modifie_le": {
+          "name": "modifie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "suivis_contact_idx": {
+          "name": "suivis_contact_idx",
+          "columns": [
+            {
+              "expression": "contact_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "suivis_chien_idx": {
+          "name": "suivis_chien_idx",
+          "columns": [
+            {
+              "expression": "chien_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "suivis_contact_id_contacts_id_fk": {
+          "name": "suivis_contact_id_contacts_id_fk",
+          "tableFrom": "suivis",
+          "tableTo": "contacts",
+          "columnsFrom": [
+            "contact_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "suivis_chien_id_chiens_id_fk": {
+          "name": "suivis_chien_id_chiens_id_fk",
+          "tableFrom": "suivis",
+          "tableTo": "chiens",
+          "columnsFrom": [
+            "chien_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "suivis_motif_id_motifs_suivi_id_fk": {
+          "name": "suivis_motif_id_motifs_suivi_id_fk",
+          "tableFrom": "suivis",
+          "tableTo": "motifs_suivi",
+          "columnsFrom": [
+            "motif_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.types_membre": {
+      "name": "types_membre",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre": {
+          "name": "ordre",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.utilisateurs": {
+      "name": "utilisateurs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "identifiant": {
+          "name": "identifiant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mot_de_passe_hash": {
+          "name": "mot_de_passe_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'superadmin'"
+        },
+        "actif": {
+          "name": "actif",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "derniere_connexion": {
+          "name": "derniere_connexion",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "utilisateurs_identifiant_unique": {
+          "name": "utilisateurs_identifiant_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "identifiant"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

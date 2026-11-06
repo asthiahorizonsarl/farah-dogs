@@ -1,26 +1,51 @@
 {
-  "name": "app",
+  "name": "farahdog",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start -p ${PORT:-3000}",
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "import:access": "tsx scripts/import-access.ts",
+    "verify:access": "tsx scripts/verify-access.ts",
+    "import:chiens": "tsx scripts/import-chiens.ts",
+    "verify:chiens": "tsx scripts/verify-chiens.ts",
+    "admin:creer": "tsx scripts/creer-admin.ts",
+    "db:migrate:prod": "node scripts/migrer.mjs"
   },
   "dependencies": {
+    "docxtemplater": "^3.71.1",
+    "drizzle-orm": "^0.45.4",
+    "lucide-react": "^1.70.0",
     "next": "16.4.5",
+    "nodemailer": "^10.3.1",
+    "pdf-lib": "^1.17.1",
+    "pizzip": "^3.3.0",
+    "postgres": "^3.4.9",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "csv-parse": "^7.0.3",
+    "dotenv": "^18.0.9",
+    "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "exceljs": "^4.4.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }

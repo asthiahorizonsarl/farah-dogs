@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  // Envoi des modèles Word (.docx) depuis les Paramètres.
+  experimental: { serverActions: { bodySizeLimit: "12mb" } },
   turbopack: {
     rules: {
       "*.css": {
