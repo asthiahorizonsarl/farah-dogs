@@ -17,12 +17,11 @@
     "db:migrate:prod": "node scripts/migrer.mjs"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.9.12",
     "docxtemplater": "^3.71.1",
     "drizzle-orm": "^0.45.4",
-    "html-to-pdfmake": "^2.5.36",
-    "jsdom": "^31.0.0",
+    "fontkit": "^2.0.4",
     "lucide-react": "^1.70.0",
-    "mammoth": "^1.13.0",
     "next": "16.4.5",
     "nodemailer": "^10.3.1",
     "pdfmake": "^0.3.13",
@@ -34,7 +33,7 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
-    "@types/jsdom": "^30.0.0",
+    "@types/fontkit": "^2.0.9",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.2",
     "@types/pdfmake": "^0.3.3",
