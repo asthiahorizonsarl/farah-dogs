@@ -65,6 +65,7 @@ function chiensAvecRemises(where?: SQL) {
   return db.query.chiens.findMany({
     where,
     orderBy: [asc(schema.chiens.nom)],
+    columns: { photo: false },
     with: {
       race: true,
       couleur: true,
@@ -113,7 +114,7 @@ export async function getRemisesDuContact(contactId: number) {
   return db.query.remises.findMany({
     where: eq(schema.remises.contactId, contactId),
     orderBy: [desc(schema.remises.dateRemise)],
-    with: { chien: { with: { race: true } }, pathologies: { with: { pathologie: true } } },
+    with: { chien: { columns: { photo: false }, with: { race: true } }, pathologies: { with: { pathologie: true } } },
   });
 }
 

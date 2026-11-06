@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Dog, Plus } from "lucide-react";
 import { PageHeader } from "@/components/ui";
 import { getChiens } from "@/lib/data";
 import { age, formatPuce, remiseEnCours, statutChien } from "@/lib/chiens";
@@ -76,8 +76,18 @@ export default async function Chiens({ searchParams }: PageProps<"/chiens">) {
             {visibles.map(({ c, s, derniere, enCours }) => (
               <tr key={c.id} className="hover:bg-stone-50">
                 <td className="font-medium">
-                  <Link href={`/chiens/${c.id}`} className="text-brand-800 hover:underline">{c.nom}</Link>
-                  {c.remises.length > 1 && <span className="ml-1 text-xs text-stone-400" title="Nombre de remises">×{c.remises.length}</span>}
+                  <span className="flex items-center gap-3">
+                    {c.photoType ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={`/chiens/photo/${c.id}?v=${c.modifieLe.getTime()}`} alt="" loading="lazy" className="size-9 shrink-0 rounded-lg object-cover ring-1 ring-stone-200" />
+                    ) : (
+                      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-stone-100 text-stone-300"><Dog className="size-4" /></span>
+                    )}
+                    <span>
+                      <Link href={`/chiens/${c.id}`} className="text-brand-800 hover:underline">{c.nom}</Link>
+                      {c.remises.length > 1 && <span className="ml-1 text-xs text-stone-400" title="Nombre de remises">×{c.remises.length}</span>}
+                    </span>
+                  </span>
                 </td>
                 <td >{c.race?.libelle}</td>
                 <td >{c.couleur?.libelle}</td>

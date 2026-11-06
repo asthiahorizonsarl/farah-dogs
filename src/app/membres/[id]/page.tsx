@@ -111,9 +111,14 @@ export default async function FicheMembre({ params, searchParams }: PageProps<"/
                 return (
                   <Link key={r.id} href={`/chiens/${r.chienId}?onglet=remises`} className="carte group block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
                     <div className="flex items-start gap-3">
-                      <span className={`grid size-11 place-items-center rounded-xl ${enCours ? "bg-brand-50 text-brand-600" : "bg-stone-100 text-stone-400"}`}>
-                        <Dog className="size-5" />
-                      </span>
+                      {r.chien.photoType ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={`/chiens/photo/${r.chienId}?v=${r.chien.modifieLe.getTime()}`} alt="" loading="lazy" className="size-11 shrink-0 rounded-xl object-cover ring-1 ring-stone-200" />
+                      ) : (
+                        <span className={`grid size-11 place-items-center rounded-xl ${enCours ? "bg-brand-50 text-brand-600" : "bg-stone-100 text-stone-400"}`}>
+                          <Dog className="size-5" />
+                        </span>
+                      )}
                       <div className="min-w-0 flex-1">
                         <div className="font-semibold text-stone-900 group-hover:text-brand-700">{r.chien.nom}</div>
                         <div className="text-sm text-stone-500">{r.chien.race?.libelle}</div>

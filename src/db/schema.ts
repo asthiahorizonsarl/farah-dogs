@@ -237,6 +237,9 @@ export const chiens = pgTable(
     decede: boolean("decede").notNull().default(false),
     dateDeces: date("date_deces"),
     remarques: text("remarques"),
+    /** Photo du chien (contenu en base64) et son type (image/jpeg, image/png, image/webp). */
+    photo: text("photo"),
+    photoType: text("photo_type"),
     creeLe: timestamp("cree_le", { withTimezone: true }).notNull().defaultNow(),
     modifieLe: timestamp("modifie_le", { withTimezone: true }).notNull().defaultNow(),
   },

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Dog, HeartPulse, MessageSquareText } from "lucide-react";
+import { Camera, Dog, HeartPulse, MessageSquareText } from "lucide-react";
 import type { ChienDetail } from "@/lib/data";
 import { formatPuce } from "@/lib/chiens";
 import { Champ, Section } from "@/components/ui";
@@ -43,6 +43,25 @@ export function ChienForm({ chien, races, couleurs }: { chien?: ChienDetail; rac
         </Section>
 
         <div className="space-y-5">
+          <Section titre="Photo" icone={<Camera />}>
+            <div className="flex items-start gap-4">
+              {c?.photoType ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={`/chiens/photo/${c.id}?v=${c.modifieLe.getTime()}`} alt={`Photo de ${c.nom}`} className="size-28 shrink-0 rounded-xl object-cover ring-1 ring-stone-200" />
+              ) : (
+                <span className="grid size-28 shrink-0 place-items-center rounded-xl bg-stone-100 text-stone-300"><Dog className="size-10" /></span>
+              )}
+              <div className="min-w-0 flex-1 space-y-2">
+                <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="champ file:mr-3 file:rounded-md file:border-0 file:bg-stone-100 file:px-2 file:py-1 file:text-sm" />
+                <p className="text-xs text-stone-400">JPEG, PNG ou WebP, 8 Mo au plus. {c?.photoType ? "Choisir un fichier remplace la photo actuelle." : ""}</p>
+                {c?.photoType && (
+                  <label className="flex items-center gap-2 text-sm text-stone-600">
+                    <input type="checkbox" name="supprimerPhoto" className="size-4 accent-brand-600" /> Supprimer la photo
+                  </label>
+                )}
+              </div>
+            </div>
+          </Section>
           <Section titre="Fin de carrière" icone={<HeartPulse />}>
             <div className="space-y-3">
               <div className="grid grid-cols-[7rem_1fr] items-center gap-3">

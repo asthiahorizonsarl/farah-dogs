@@ -34,6 +34,16 @@ export async function enregistrerChien(fd: FormData) {
       .where(id ? and(eq(schema.chiens.puce, puce), ne(schema.chiens.id, id)) : eq(schema.chiens.puce, puce));
     if (doublon) erreur(ici, `Ce numéro de puce est déjà celui de ${doublon.nom} (fiche n° ${doublon.id}).`);
   }
+  // Photo : JPEG, PNG ou WebP (affichables partout), 8 Mo au plus.
+  const fichier = fd.get("photo");
+  let photo: { photo: string | null; photoType: string | null } | undefined;
+  if (fichier instanceof File && fichier.size > 0) {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(fichier.type)) erreur(ici, "La photo doit être au format JPEG, PNG ou WebP.");
+    if (fichier.size > 8 * 1024 * 1024) erreur(ici, "La photo dépasse 8 Mo.");
+    photo = { photo: Buffer.from(await fichier.arrayBuffer()).toString("base64"), photoType: fichier.type };
+  } else if (fd.get("supprimerPhoto") === "on") {
+    photo = { photo: null, photoType: null };
+  }
   const decede = fd.get("decede") === "on";
   const reforme = fd.get("reforme") === "on";
   const data = {
@@ -48,6 +58,7 @@ export async function enregistrerChien(fd: FormData) {
     decede,
     dateDeces: decede ? texte(fd, "dateDeces") : null,
     remarques: texte(fd, "remarques"),
+    ...photo,
   };
   let chienId = id;
   if (id) {

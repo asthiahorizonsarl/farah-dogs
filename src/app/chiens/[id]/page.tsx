@@ -43,9 +43,14 @@ export default async function FicheChien({ params, searchParams }: PageProps<"/c
       <PageHeader
         retour={{ href: "/chiens", label: "Chiens" }}
         avant={
-          <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-600 ring-1 ring-brand-100">
-            <Dog className="size-7" />
-          </span>
+          c.photoType ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={`/chiens/photo/${c.id}?v=${c.modifieLe.getTime()}`} alt={`Photo de ${c.nom}`} className="size-16 shrink-0 rounded-2xl object-cover ring-1 ring-stone-200" />
+          ) : (
+            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-600 ring-1 ring-brand-100">
+              <Dog className="size-7" />
+            </span>
+          )
         }
         titre={<span className="flex items-center gap-3">{c.nom} <span className={`badge ${s.couleur}`}>{s.label}</span></span>}
         sousTitre={
