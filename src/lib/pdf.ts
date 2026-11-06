@@ -2,7 +2,6 @@ import "server-only";
 import path from "node:path";
 import mammoth from "mammoth";
 import htmlToPdfmake from "html-to-pdfmake";
-import { JSDOM } from "jsdom";
 import PizZip from "pizzip";
 import pdfmake from "pdfmake";
 import type { Content } from "pdfmake/interfaces";
@@ -79,6 +78,8 @@ export async function wordEnPdf(docx: Buffer): Promise<Buffer> {
       })),
     },
   );
+  // jsdom est chargé seulement au moment de la conversion (pas pendant la compilation).
+  const { JSDOM } = await import("jsdom");
   const { window } = new JSDOM("");
   const contenu = htmlToPdfmake(html || "<p></p>", {
     window,
