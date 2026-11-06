@@ -21,7 +21,7 @@ function Carte({ id, titre, aide, children }: { id: string; titre: string; aide:
 
 const TYPES = Object.entries(TYPES_DOC) as [TypeDoc, (typeof TYPES_DOC)[TypeDoc]][];
 
-export async function SectionsEnvoi() {
+export async function SectionsEnvoi({ message }: { message?: { section?: string; ok?: string; erreur?: string } }) {
   const [p, emails, modeles] = await Promise.all([
     getParametresEnvoi(),
     db.select().from(schema.emailsTypes),
@@ -35,6 +35,9 @@ export async function SectionsEnvoi() {
     <>
       {/* Seuil et SMTP */}
       <Carte id="envois" titre="Seuil et serveur e-mail" aide="Seuil qui sépare les deux attestations de dons, et serveur d'envoi des e-mails. Tous les envois sont manuels.">
+        {message?.section === "envois" && (message.erreur || message.ok) && (
+          <p className={`m-5 mb-0 ${message.erreur ? "notice-erreur" : "notice-ok"}`}>{message.erreur ?? message.ok}</p>
+        )}
         <form action={enregistrerEnvoi}>
           <div className="space-y-5 p-5">
             <div className="grid gap-4 sm:grid-cols-[12rem_1fr] sm:items-end">
@@ -60,12 +63,6 @@ export async function SectionsEnvoi() {
               <Champ label="Nom de l'expéditeur"><input name="expediteurNom" defaultValue={p.expediteurNom ?? ""} className="champ" /></Champ>
               <Champ label="E-mail de l'expéditeur"><input name="expediteurEmail" defaultValue={p.expediteurEmail ?? ""} className="champ" /></Champ>
               <Champ label="Copie cachée (facultatif)"><input name="copieCachee" defaultValue={p.copieCachee ?? ""} placeholder="ex. archive@farah-dogs.ch" className="champ" /></Champ>
-              <Champ label="Pièce jointe des attestations">
-                <select name="pieceJointe" defaultValue={p.pieceJointe} className="champ">
-                  <option value="word">Modèle Word (sinon attestation PDF)</option>
-                  <option value="pdf">Toujours l&apos;attestation PDF intégrée</option>
-                </select>
-              </Champ>
             </div>
             {p.smtpMotDePasse && (
               <label className="flex items-center gap-2 text-sm text-stone-600">
@@ -85,8 +82,10 @@ export async function SectionsEnvoi() {
       <section id="modeles" className="scroll-mt-6 space-y-5">
         <p className="text-sm text-stone-500">
           Un modèle Word et un e-mail par document. Mettez toutes les langues dans le même document : seules les variables
-          <code className="mx-1 rounded bg-stone-100 px-1">{"{{…}}"}</code>sont remplacées.
+          <code className="mx-1 rounded bg-stone-100 px-1">{"{{…}}"}</code>sont remplacées. Le Word rempli est converti en PDF,
+          puis envoyé en pièce jointe ou téléchargé pour le courrier.
         </p>
+
         {TYPES.map(([type, info]) => {
           const modele = modeles.find((m) => m.categorie === type);
           const email = emails.find((e) => e.type === type);
@@ -109,7 +108,7 @@ export async function SectionsEnvoi() {
                     </div>
                   ) : (
                     <p className="rounded-lg border border-dashed border-stone-200 px-3 py-2 text-sm text-stone-500">
-                      {type === "demande" ? "Aucun modèle : l'e-mail part sans pièce jointe." : type === "don_grand" ? "Aucun modèle : celui des dons jusqu'au seuil est utilisé, sinon le PDF intégré." : "Aucun modèle : l'attestation PDF intégrée est utilisée."}
+                      {type === "don_grand" ? "Aucun modèle propre : celui des dons jusqu'au seuil est utilisé." : "Aucun modèle : ce document ne peut pas être envoyé tant qu'un Word n'est pas déposé."}
                     </p>
                   )}
                   <form action={deposerModeleWord} className="space-y-2">

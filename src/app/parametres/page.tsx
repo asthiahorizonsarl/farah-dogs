@@ -189,7 +189,7 @@ export default async function Parametres({ searchParams }: PageProps<"/parametre
               </div>
               <div className="border-t border-stone-100 bg-stone-50/50 px-5 py-3"><button className="btn-principal">Enregistrer</button></div>
             </form>
-            <SectionsEnvoi />
+            <SectionsEnvoi message={{ section: typeof sp.section === "string" ? sp.section : undefined, ok: typeof sp.ok === "string" ? sp.ok : undefined, erreur: typeof sp.erreur === "string" ? sp.erreur : undefined }} />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { connection } from "next/server";
 import PizZip from "pizzip";
 import { exigerUtilisateur } from "@/lib/auth";
-import { documentPour, estTypeDoc, getDestinataires, journaliserCourrier } from "@/lib/envois";
+import { SANS_MODELE, documentPour, estTypeDoc, getDestinataires, journaliserCourrier } from "@/lib/envois";
 
 /**
  * Courriers d'un type pour une année, dans un ZIP.
@@ -21,7 +21,7 @@ export async function GET(req: Request, ctx: RouteContext<"/envois/courriers/[ty
   const zip = new PizZip();
   for (const d of liste) {
     const doc = await documentPour(d);
-    if (!doc) return new Response("Aucun modèle Word déposé pour ce document (Paramètres › Modèles).", { status: 404 });
+    if (!doc) return new Response(SANS_MODELE, { status: 404 });
     zip.file(doc.nom, doc.contenu);
     await journaliserCourrier(d, doc.modeleId);
   }

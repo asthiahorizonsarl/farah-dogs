@@ -6,7 +6,7 @@ import { and, eq, ne } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { exigerUtilisateur } from "@/lib/auth";
 import { parseMontant } from "@/lib/format";
-import { estTypeDoc, transporteur, verifierModeleWord } from "@/lib/envois";
+import { estTypeDoc, expliquerErreurSmtp, transporteur, verifierModeleWord } from "@/lib/envois";
 
 const t = (fd: FormData, k: string) => {
   const v = String(fd.get(k) ?? "").trim();
@@ -14,8 +14,9 @@ const t = (fd: FormData, k: string) => {
 };
 function fin(ancre: string, msg?: { ok?: string; erreur?: string }): never {
   revalidatePath("/parametres");
+  // Le message est affiché dans la section concernée (« section »), pas seulement en haut de page.
   const q = msg?.ok ? `?ok=${encodeURIComponent(msg.ok)}` : msg?.erreur ? `?erreur=${encodeURIComponent(msg.erreur)}` : "";
-  redirect(`/parametres${q}#${ancre}`);
+  redirect(`/parametres${q}${q ? "&" : "?"}section=${ancre}#${ancre}`);
 }
 
 export async function enregistrerEnvoi(fd: FormData) {
@@ -32,7 +33,6 @@ export async function enregistrerEnvoi(fd: FormData) {
     expediteurNom: t(fd, "expediteurNom"),
     expediteurEmail: t(fd, "expediteurEmail"),
     copieCachee: t(fd, "copieCachee"),
-    pieceJointe: t(fd, "pieceJointe") === "pdf" ? "pdf" : "word",
   };
   // Le mot de passe n'est remplacé que s'il est saisi (il n'est jamais réaffiché).
   const mdp = String(fd.get("smtpMotDePasse") ?? "");
@@ -54,7 +54,7 @@ export async function testerSmtp(fd: FormData) {
       to: a, subject: "Test d'envoi – Farah Dogs", text: "Le serveur SMTP est correctement configuré.",
     });
   } catch (e) {
-    fin("envois", { erreur: `Échec du test SMTP : ${e instanceof Error ? e.message : String(e)}` });
+    fin("envois", { erreur: `Échec du test SMTP : ${await expliquerErreurSmtp(e, "test")}` });
   }
   fin("envois", { ok: `E-mail de test envoyé à ${a}.` });
 }

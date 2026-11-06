@@ -31,18 +31,16 @@ export function EnvoiPanneau({
           <h2 className="font-semibold text-stone-900">{t.titre} {annee}</h2>
           <p className="text-sm text-stone-500">
             {t.aide} {liste.length} personne{liste.length > 1 ? "s" : ""} · {aFaire.length} à faire.
-            {!modeleDepose && (type === "demande"
-              ? " Aucun modèle Word : l'e-mail part sans pièce jointe et les courriers ne peuvent pas être générés."
-              : " Aucun modèle Word : l'attestation PDF intégrée est utilisée.")}
+            {!modeleDepose && <strong className="text-red-700"> Aucun modèle Word : déposez-le dans Paramètres pour pouvoir envoyer.</strong>}
           </p>
         </div>
         <form action={envoyerTous}>
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="annee" value={annee} />
           <input type="hidden" name="retour" value={retour} />
-          <button className="btn-principal" disabled={!mails}><Send /> Envoyer à tous ({mails} e-mail{mails > 1 ? "s" : ""})</button>
+          <button className="btn-principal" disabled={!mails || !modeleDepose}><Send /> Envoyer à tous ({mails} e-mail{mails > 1 ? "s" : ""})</button>
         </form>
-        <a href={`/envois/courriers/${type}/${annee}`} className={`btn-secondaire ${courriers && (modeleDepose || type !== "demande") ? "" : "pointer-events-none opacity-50"}`}>
+        <a href={`/envois/courriers/${type}/${annee}`} className={`btn-secondaire ${courriers && modeleDepose ? "" : "pointer-events-none opacity-50"}`}>
           <Download /> Courriers sans e-mail ({courriers})
         </a>
       </div>
@@ -77,7 +75,7 @@ export function EnvoiPanneau({
                   </td>
                   <td>
                     <div className="flex justify-end gap-1">
-                      {d.email && (
+                      {d.email && modeleDepose && (
                         <form action={envoyerUn}>
                           <input type="hidden" name="type" value={type} />
                           <input type="hidden" name="annee" value={annee} />
@@ -86,7 +84,7 @@ export function EnvoiPanneau({
                           <button className="btn-secondaire px-2.5 py-1 text-xs"><Mail /> {d.dejaFait ? "Renvoyer" : "E-mail"}</button>
                         </form>
                       )}
-                      {(modeleDepose || type !== "demande") && (
+                      {modeleDepose && (
                         <a href={`/envois/document/${type}/${d.contact.id}/${annee}`} className="btn-fantome px-2 py-1 text-xs" title="Document à imprimer (courrier)">
                           <Download /> Courrier
                         </a>

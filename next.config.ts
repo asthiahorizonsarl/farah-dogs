@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  // Bibliothèques de conversion Word → PDF chargées telles quelles côté serveur (polices, jsdom).
+  serverExternalPackages: ["pdfmake", "jsdom", "mammoth", "html-to-pdfmake"],
   // Envoi des modèles Word (.docx) depuis les Paramètres.
   experimental: { serverActions: { bodySizeLimit: "12mb" } },
   turbopack: {

@@ -54,7 +54,9 @@ seules les variables `{{nom_complet}}`, `{{montant_don}}`… sont remplacées �
 - Seuil réglable dans **Paramètres › Seuil et serveur e-mail** (100 CHF par défaut).
 - Tout est manuel : bouton « E-mail » par personne, « Envoyer à tous » (ceux qui ne l'ont pas encore reçu),
   « Courrier » pour télécharger le document, « Courriers sans e-mail » (ZIP).
-- Sans modèle Word : attestation PDF intégrée ; la demande part sans pièce jointe.
+- Chaque document est généré depuis son modèle Word (variables remplies), puis **converti en PDF en JavaScript**
+  (mammoth + pdfmake, sans logiciel externe). La mise en page est proche du Word mais pas identique.
+- Sans modèle Word déposé pour un document, il ne peut pas être envoyé.
 - Rien ne part tout seul : boutons « Envoyer » et « Générer les courriers (ZIP) » dans **Dons › Attestations**.
 
 ## Déploiement (Railway)
@@ -67,5 +69,7 @@ Ajouter un service PostgreSQL et définir les variables :
 | `ADMIN_IDENTIFIANT`, `ADMIN_MOT_DE_PASSE` | premier compte super admin |
 | `SMTP_PASSWORD` (facultatif) | mot de passe SMTP, prioritaire sur celui saisi dans Paramètres |
 
-Build `npm run build`, démarrage `npm run db:migrate && npm start`. Les fichiers `.accdb`, `.xlsx`, `.env` et `data/`
+Les erreurs d'envoi SMTP sont expliquées dans Paramètres et écrites dans les journaux Railway (`[SMTP] …`, sans mot de passe).
+
+Build `npm run build`, démarrage `npm start` (applique d'abord les migrations). Les fichiers `.accdb`, `.xlsx`, `.env` et `data/`
 contiennent des données personnelles ou des secrets et ne sont pas versionnés.

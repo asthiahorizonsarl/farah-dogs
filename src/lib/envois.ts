@@ -4,7 +4,7 @@ import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import nodemailer from "nodemailer";
 import { db, schema } from "@/db";
-import { genererAttestation, type Versement } from "./attestation";
+import { wordEnPdf } from "./pdf";
 import { getAssociation } from "./data";
 
 /**
@@ -14,7 +14,7 @@ import { getAssociation } from "./data";
 export const TYPES_DOC = {
   cotisation: { titre: "Attestation de cotisation", aide: "Membres dont la cotisation de l'année est payée." },
   don: { titre: "Don jusqu'au seuil — attestation et remerciements", aide: "Donateurs dont le total de l'année est inférieur ou égal au seuil." },
-  don_grand: { titre: "Don au-dessus du seuil — attestation", aide: "Donateurs au-dessus du seuil. Sans modèle, celui des dons jusqu'au seuil est utilisé." },
+  don_grand: { titre: "Don au-dessus du seuil — attestation", aide: "Donateurs au-dessus du seuil. Sans modèle propre, celui des dons jusqu'au seuil est utilisé." },
   demande: { titre: "Demande de cotisation / don", aide: "Membres dont la cotisation de l'année n'est pas encore payée." },
 } as const;
 export type TypeDoc = keyof typeof TYPES_DOC;
@@ -198,29 +198,17 @@ function nomFichier(d: Destinataire, ext: string) {
 }
 
 /**
- * Document à envoyer ou imprimer : modèle Word du type rempli.
- * Sans modèle : attestation PDF intégrée (attestations), rien pour une demande.
+ * Document à envoyer ou imprimer : modèle Word du type, rempli avec les variables, puis converti en PDF.
+ * Sans modèle Word déposé pour ce type : null (rien n'est envoyé).
  */
-export async function documentPour(d: Destinataire, forcerPdf = false) {
-  const modele = forcerPdf ? null : await modelePour(d.type);
-  if (modele) {
-    return {
-      contenu: remplirWord(modele.fichier, await variables(d)), nom: nomFichier(d, "docx"),
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", modeleId: modele.id as number | null,
-    };
-  }
-  if (d.type === "demande") return null;
-  const c = d.contact;
-  const allemand = d.langues.some((l) => l.libelle.toLowerCase() === "allemand") && !d.langues.some((l) => l.libelle.toLowerCase() === "français");
-  const pdf = await genererAttestation({
-    annee: d.annee, langue: allemand ? "de" : "fr",
-    destinataire: { politesse: c.formePolitesse?.libelle ?? null, nom: c.nom, prenom: c.prenom, societe: c.societe, adresse: c.adresse,
-      npaLocalite: [c.codePostal, c.localite].filter(Boolean).join(" ") || null, pays: c.pays },
-    versements: d.versements as Versement[],
-    association: await getAssociation(),
-  });
-  return { contenu: Buffer.from(pdf), nom: nomFichier(d, "pdf"), type: "application/pdf", modeleId: null };
+export async function documentPour(d: Destinataire) {
+  const modele = await modelePour(d.type);
+  if (!modele) return null;
+  const word = remplirWord(modele.fichier, await variables(d));
+  return { contenu: await wordEnPdf(word), nom: nomFichier(d, "pdf"), type: "application/pdf", modeleId: modele.id };
 }
+
+export const SANS_MODELE = "Aucun modèle Word déposé pour ce document (Paramètres › Modèles).";
 
 // ——— Envoi ———
 
@@ -236,8 +224,29 @@ export async function transporteur() {
       ignoreTLS: p.smtpSecurite === "aucune",
       requireTLS: p.smtpSecurite === "starttls",
       auth: p.smtpUtilisateur ? { user: p.smtpUtilisateur, pass: process.env.SMTP_PASSWORD || p.smtpMotDePasse || "" } : undefined,
+      // Ne pas rester bloqué si le serveur ne répond pas.
+      connectionTimeout: 15_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 30_000,
     }),
   };
+}
+
+/** Message clair pour une erreur SMTP, et trace dans les journaux du serveur (sans mot de passe). */
+export async function expliquerErreurSmtp(e: unknown, contexte: string) {
+  const p = await getParametresEnvoi();
+  const err = e as { code?: string; responseCode?: number; command?: string; message?: string };
+  const brut = err?.message ?? String(e);
+  console.error(`[SMTP] ${contexte} — hôte=${p.smtpHote} port=${p.smtpPort} sécurité=${p.smtpSecurite} utilisateur=${p.smtpUtilisateur ? "oui" : "non"} mot_de_passe=${process.env.SMTP_PASSWORD || p.smtpMotDePasse ? "oui" : "non"} code=${err?.code ?? "-"} réponse=${err?.responseCode ?? "-"} : ${brut}`);
+  const m = brut.toLowerCase();
+  let conseil = "";
+  if (err?.code === "EAUTH" || err?.responseCode === 535) conseil = "Identifiant ou mot de passe SMTP refusé par le serveur.";
+  else if (err?.code === "EDNS" || m.includes("enotfound") || m.includes("getaddrinfo")) conseil = "Nom du serveur SMTP introuvable : vérifiez l'adresse du serveur.";
+  else if (m.includes("wrong version number") || m.includes("ssl routines")) conseil = "Mauvaise sécurité pour ce port : 465 = SSL/TLS, 587 = STARTTLS.";
+  else if (err?.code === "ETIMEDOUT" || err?.code === "ESOCKET" || err?.code === "ECONNECTION" || m.includes("timeout") || m.includes("econnrefused"))
+    conseil = "Le serveur SMTP ne répond pas : hôte ou port incorrect, ou port bloqué par l'hébergeur (Railway limite l'envoi SMTP sortant selon le forfait).";
+  else if (err?.code === "EENVELOPE" || err?.responseCode === 553 || err?.responseCode === 550) conseil = "Adresse d'expéditeur refusée : elle doit correspondre au compte SMTP.";
+  return conseil ? `${conseil} (détail : ${brut})` : brut;
 }
 
 async function journaliser(d: Destinataire, mode: "mail" | "courrier", statut: string, erreur: string | null, modeleId: number | null) {
@@ -261,19 +270,20 @@ export async function envoyerParMail(d: Destinataire, tr?: Awaited<ReturnType<ty
     const modeleMail = m ?? (d.type === "don_grand" ? (await db.select().from(schema.emailsTypes).where(eq(schema.emailsTypes.type, "don")))[0] : undefined);
     if (!modeleMail) throw new Error(`Aucun e-mail défini pour « ${TYPES_DOC[d.type].titre} » (Paramètres).`);
     const vars = await variables(d);
-    const doc = await documentPour(d, p.pieceJointe === "pdf" && d.type !== "demande");
+    const doc = await documentPour(d);
+    if (!doc) throw new Error(SANS_MODELE);
     await t.sendMail({
       from: p.expediteurNom ? `"${p.expediteurNom}" <${p.expediteurEmail}>` : p.expediteurEmail!,
       to: d.email,
       bcc: p.copieCachee || undefined,
       subject: remplir(modeleMail.objet, vars),
       text: remplir(modeleMail.contenu, vars),
-      attachments: doc ? [{ filename: doc.nom, content: doc.contenu, contentType: doc.type }] : [],
+      attachments: [{ filename: doc.nom, content: doc.contenu, contentType: doc.type }],
     });
-    await journaliser(d, "mail", "envoyé", null, doc?.modeleId ?? null);
+    await journaliser(d, "mail", "envoyé", null, doc.modeleId);
     return { ok: true as const };
   } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
+    const msg = await expliquerErreurSmtp(e, `envoi ${d.type} à la fiche ${d.contact.id}`);
     await journaliser(d, "mail", "erreur", msg, null);
     return { ok: false as const, erreur: msg };
   }
