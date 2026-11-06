@@ -2,13 +2,15 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Check, FileText, Pencil, Search, Trash2, X } from "lucide-react";
+import { Check, FileText, Mail, MailCheck, Pencil, Search, Trash2, X } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { marquerPayee, modifierCotisation, supprimerCotisation } from "./actions";
+import { envoyerUn } from "@/app/envois/actions";
 
 export type LigneCotisation = {
   id: number; contactId: number; membre: string; lieu: string; archive: boolean;
   montant: number | null; date: string | null; remarque: string | null; anneeDeduite: boolean;
+  email: string | null; attestationEnvoyee: boolean;
 };
 
 const chf = new Intl.NumberFormat("fr-CH", { style: "currency", currency: "CHF" });
@@ -25,7 +27,7 @@ const FILTRES = [
 type Filtre = (typeof FILTRES)[number]["v"];
 const payee = (l: LigneCotisation) => (l.montant ?? 0) > 0;
 
-export function LignesCotisations({ annee, lignes, defaut }: { annee: number | null; lignes: LigneCotisation[]; defaut: number | null }) {
+export function LignesCotisations({ annee, lignes, defaut, modeleDepose }: { annee: number | null; lignes: LigneCotisation[]; defaut: number | null; modeleDepose: boolean }) {
   const [q, setQ] = useState("");
   const [filtre, setFiltre] = useState<Filtre>("tous");
   const [edition, setEdition] = useState<number | null>(null);
@@ -114,9 +116,24 @@ export function LignesCotisations({ annee, lignes, defaut }: { annee: number | n
                   <td>
                     <div className="flex justify-end gap-1">
                       {annee !== null && payee(l) && (
-                        <a href={`/envois/document/cotisation/${l.contactId}/${annee}`} className="btn-secondaire px-2.5 py-1 text-xs" title="Attestation (modèle Word, sinon PDF)">
+                        <a href={`/envois/document/cotisation/${l.contactId}/${annee}`} className="btn-secondaire px-2.5 py-1 text-xs" title="Télécharger l'attestation (PDF)">
                           <FileText /> Attestation
                         </a>
+                      )}
+                      {annee !== null && payee(l) && l.email && modeleDepose && (
+                        <form action={envoyerUn}>
+                          <input type="hidden" name="type" value="cotisation" />
+                          <input type="hidden" name="annee" value={annee} />
+                          <input type="hidden" name="contactId" value={l.contactId} />
+                          <input type="hidden" name="retour" value={retour} />
+                          <ConfirmButton
+                            className={`btn-secondaire px-2.5 py-1 text-xs ${l.attestationEnvoyee ? "text-emerald-700" : ""}`}
+                            title={l.attestationEnvoyee ? `Attestation déjà envoyée à ${l.email}` : `Envoyer l'attestation à ${l.email}`}
+                            message={`${l.attestationEnvoyee ? "Renvoyer" : "Envoyer"} l'attestation de cotisation ${annee} à ${l.email} ?`}
+                          >
+                            {l.attestationEnvoyee ? <><MailCheck /> Renvoyer</> : <><Mail /> E-mail</>}
+                          </ConfirmButton>
+                        </form>
                       )}
                       <button onClick={() => setEdition(l.id)} className="btn-fantome px-2 py-1" title="Modifier"><Pencil /></button>
                       <form action={supprimerCotisation}>

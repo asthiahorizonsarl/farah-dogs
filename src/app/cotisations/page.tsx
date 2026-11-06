@@ -10,7 +10,7 @@ import { LignesCotisations, type LigneCotisation } from "./LignesCotisations";
 import { EnvoiPanneau } from "@/components/EnvoiPanneau";
 import { Bip } from "@/components/Bip";
 import { getDestinataires } from "@/lib/envois";
-import { inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { creerAnnee, modifierAnnee, preparerCotisations, saisirCotisation, supprimerAnnee } from "./actions";
 
@@ -42,9 +42,20 @@ export default async function Cotisations({ searchParams }: PageProps<"/cotisati
     vue === "recap" ? Promise.resolve([]) : getContactsChoix(),
     anneeManquantes ? getCotisationsManquantes(anneeManquantes) : Promise.resolve([]),
   ]);
+  // Attestations de cotisation déjà envoyées par e-mail cette année, et modèle Word disponible.
+  const [journal, modeleCotisation] = stats
+    ? await Promise.all([
+        db.selectDistinct({ id: schema.envois.contactId }).from(schema.envois)
+          .where(and(eq(schema.envois.annee, stats.annee), eq(schema.envois.categorie, "cotisation"), eq(schema.envois.mode, "mail"), eq(schema.envois.statut, "envoyé"))),
+        db.select({ id: schema.modelesWord.id }).from(schema.modelesWord).where(eq(schema.modelesWord.categorie, "cotisation")).limit(1),
+      ])
+    : [[], []];
+  const dejaEnvoyes = new Set(journal.map((j) => j.id));
   const lignes: LigneCotisation[] = lignesBrutes.map((l) => ({
     id: l.id, contactId: l.contactId, membre: nomComplet(l.contact), lieu: [l.contact.codePostal, l.contact.localite].filter(Boolean).join(" "),
     archive: l.contact.archive, montant: l.montantCentimes, date: l.datePaiement, remarque: l.remarque, anneeDeduite: l.anneeDeduite,
+    email: l.contact.email?.split(/[\s;,]+/).find((e) => e.includes("@")) ?? null,
+    attestationEnvoyee: dejaEnvoyes.has(l.contactId),
   }));
   const membres = contacts.filter((c) => !c.archive).map((c) => ({ id: c.id, libelle: libelleContact(c) }));
   const prochaine = Math.max(anneeCourante, ...annees.map((a) => a.annee + 1));
@@ -189,7 +200,7 @@ export default async function Cotisations({ searchParams }: PageProps<"/cotisati
             <p className="notice-erreur">Ces {sansAnnee} cotisations n&apos;ont ni année ni date dans Access. Modifiez-les pour leur donner une année.</p>
           )}
 
-          {sousVue === "lignes" && <LignesCotisations annee={stats?.annee ?? null} lignes={lignes} defaut={stats?.defaut ?? null} />}
+          {sousVue === "lignes" && <LignesCotisations annee={stats?.annee ?? null} lignes={lignes} defaut={stats?.defaut ?? null} modeleDepose={modeleCotisation.length > 0} />}
 
           {/* Réglages de l'année */}
           {stats && sousVue === "lignes" && (
